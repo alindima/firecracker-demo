@@ -1,5 +1,7 @@
 #!/bin/bash -e
 SB_ID="${1:-0}" # Default to sb_id=0
+echo $SB_ID
+
 
 RO_DRIVE="$PWD/xenial.rootfs.ext4"
 
@@ -54,7 +56,7 @@ KERNEL_BOOT_ARGS="${KERNEL_BOOT_ARGS} ip=${FC_IP}::${TAP_IP}:${MASK_LONG}::eth0:
 # Start Firecracker API server
 rm -f "$API_SOCKET"
 
-./firecracker --api-sock "$API_SOCKET" --id "${SB_ID}" --boot-timer &>/dev/null &
+taskset --cpu-list 1 ./firecracker --api-sock "$API_SOCKET" --id "${SB_ID}" --boot-timer &>/dev/null &
 
 sleep 0.015s
 
